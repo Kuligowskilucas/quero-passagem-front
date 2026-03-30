@@ -24,7 +24,11 @@
     </div>
 
     <button @click="handleSearch" :disabled="!canSearch || loading" class="search-btn">
-      {{ loading ? 'BUSCANDO...' : 'BUSCAR PASSAGEM' }}
+      <span v-if="loading" class="btn-loading">
+        <span class="btn-spinner"></span>
+        BUSCANDO...
+      </span>
+      <span v-else>BUSCAR PASSAGEM</span>
     </button>
 
     <p v-if="error" class="error">{{ error }}</p>
@@ -168,5 +172,25 @@ async function handleSearch() {
   text-align: center;
   margin-top: 12px;
   font-size: 14px;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

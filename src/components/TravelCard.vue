@@ -30,19 +30,39 @@
       </div>
     </div>
 
-    <SeatMap v-if="expanded" :travelId="travel.id" />
+    <div class="seats-wrapper" :class="{ open: showSeats }">
+      <SeatMap v-if="loaded" :travelId="travel.id" />
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import SeatMap from './SeatMap.vue'
 
-defineProps({
+const props = defineProps({
   travel: Object,
   expanded: Boolean,
 })
 
 defineEmits(['toggle'])
+
+const loaded = ref(false)
+const showSeats = ref(false)
+
+watch(() => props.expanded, (val) => {
+  if (val) {
+    loaded.value = true
+    requestAnimationFrame(() => {
+      showSeats.value = true
+    })
+  } else {
+    showSeats.value = false
+    setTimeout(() => {
+      loaded.value = false
+    }, 500)
+  }
+})
 
 function formatDuration(seconds) {
   const hours = Math.floor(seconds / 3600)
@@ -150,5 +170,43 @@ function formatDuration(seconds) {
   background-color: white;
   color: #1a3a5c;
   border: 2px solid #1a3a5c;
+}
+
+/* .seats-enter-active,
+.seats-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.seats-enter-from {
+  opacity: 0;
+  transform: translateY(-15px);
+}
+
+.seats-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.seats-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.seats-leave-to {
+  opacity: 0;
+  transform: translateY(-15px);
+} */
+
+ .seats-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.3s ease;
+}
+
+.seats-wrapper.open {
+  max-height: 1200px;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease 0.15s;
 }
 </style>

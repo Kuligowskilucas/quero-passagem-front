@@ -1,57 +1,62 @@
 <template>
-  <div class="seat-map-container">
-    <div v-if="loading" class="loading">Carregando poltronas...</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
+  <transition name="slide">
+    <div class="seat-map-container">
+      <LoadingSpinner v-if="loading" message="Carregando poltronas..." />
+      <div v-else-if="error" class="error">{{ error }}</div>
 
-    <template v-else>
-      <p class="instruction">Selecione a quantidade de passageiros marcando as poltronas desejadas:</p>
+      <div v-else class="seats-content">
+        <p class="instruction">Selecione a quantidade de passageiros marcando as poltronas desejadas:</p>
 
-      <div class="seat-layout">
-        <div class="bus-map">
-          <div class="bus-body">
-            <div v-for="(row, rowIndex) in seatMap" :key="rowIndex" class="seat-row">
-              <template v-for="(seat, colIndex) in row" :key="colIndex">
-                <div
-                  v-if="seat.type === 'seat'"
-                  class="seat"
-                  :class="{
-                    occupied: seat.occupied,
-                    selected: isSelected(seat.seat),
-                    available: !seat.occupied && seat.seat,
-                  }"
-                  @click="toggleSeat(seat)"
-                >
-                  {{ seat.seat || '' }}
-                </div>
-                <div v-else class="seat empty">
-                  <span v-if="seat.occupied">X</span>
-                </div>
-              </template>
+        <div class="seat-layout">
+          <div class="bus-map">
+            <div class="bus-body">
+              <div v-for="(row, rowIndex) in seatMap" :key="rowIndex" class="seat-row">
+                <template v-for="(seat, colIndex) in row" :key="colIndex">
+                  <div
+                    v-if="seat.type === 'seat'"
+                    class="seat"
+                    :class="{
+                      occupied: seat.occupied,
+                      selected: isSelected(seat.seat),
+                      available: !seat.occupied && seat.seat,
+                    }"
+                    @click="toggleSeat(seat)"
+                  >
+                    {{ seat.seat || '' }}
+                  </div>
+                  <div v-else class="seat empty">
+                    <span v-if="seat.occupied">X</span>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div class="legend">
+              <span><span class="dot available"></span> Livre</span>
+              <span><span class="dot selected"></span> Selecionado</span>
+              <span><span class="dot occupied"></span> Ocupado</span>
             </div>
           </div>
 
-          <div class="legend">
-            <span><span class="dot available"></span> Livre</span>
-            <span><span class="dot selected"></span> Selecionado</span>
-            <span><span class="dot occupied"></span> Ocupado</span>
-          </div>
-        </div>
-
-        <div class="selected-panel">
-          <h3>Poltronas selecionadas</h3>
-          <div v-if="selectedSeats.length === 0" class="no-seats">-</div>
-          <div v-else class="seats-list">
-            <span v-for="seat in selectedSeats" :key="seat" class="seat-badge">{{ seat }}</span>
+          <div class="selected-panel">
+            <h3>Poltronas selecionadas</h3>
+            <div v-if="selectedSeats.length === 0" class="no-seats">-</div>
+            <div v-else class="seats-list">
+              <transition-group name="badge">
+                <span v-for="seat in selectedSeats" :key="seat" class="seat-badge">{{ seat }}</span>
+              </transition-group>
+            </div>
           </div>
         </div>
       </div>
-    </template>
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../services/api'
+import LoadingSpinner from './LoadingSpinning.vue'
 
 const props = defineProps({
   travelId: { type: String, required: true },
@@ -103,13 +108,9 @@ function toggleSeat(seat) {
   box-sizing: border-box;
 }
 
-.loading, .error {
+.error {
   text-align: center;
   padding: 20px;
-  color: #666;
-}
-
-.error {
   color: #e53935;
 }
 
@@ -160,6 +161,7 @@ function toggleSeat(seat) {
   font-size: 9px;
   font-weight: bold;
   cursor: default;
+  transition: all 0.15s ease;
 }
 
 .seat.available {
@@ -171,6 +173,7 @@ function toggleSeat(seat) {
 
 .seat.available:hover {
   background-color: #bbdefb;
+  transform: scale(1.1);
 }
 
 .seat.selected {
@@ -178,6 +181,7 @@ function toggleSeat(seat) {
   border: 2px solid #1a3a5c;
   color: white;
   cursor: pointer;
+  transform: scale(1.05);
 }
 
 .seat.occupied {
@@ -255,5 +259,34 @@ function toggleSeat(seat) {
   border-radius: 6px;
   font-weight: bold;
   font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.badge-enter-active {
+  animation: popIn 0.2s ease;
+}
+
+.badge-leave-active {
+  animation: popIn 0.2s ease reverse;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.seats-content {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>
