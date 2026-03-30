@@ -28,4 +28,10 @@ function onSearch(data) {
   justify-content: center;
   background: linear-gradient(135deg, #1a3a5c 0%, #0d1f33 100%);
 }
+
+@media (max-width: 520px) {
+  .search-page {
+    padding: 0;
+  }
+}
 </style>

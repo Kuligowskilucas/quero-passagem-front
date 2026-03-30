@@ -193,4 +193,17 @@ async function handleSearch() {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+@media (max-width: 520px) {
+  .search-card {
+    padding: 24px 20px;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  .search-card h1 {
+    font-size: 18px;
+  }
+}
 </style>

@@ -289,4 +289,74 @@ function toggleSeat(seat) {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+@media (max-width: 768px) {
+  .seat-layout {
+    flex-direction: column;
+  }
+
+  .selected-panel {
+    width: 100%;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 16px;
+  }
+
+  .seats-list {
+    justify-content: flex-start;
+  }
+
+  .seat {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    font-size: 8px;
+  }
+
+  .seat-row {
+    gap: 2px;
+  }
+
+  .bus-body {
+    padding: 16px 8px;
+  }
+}
+
+@media (max-width: 420px) {
+  .bus-body {
+    align-items: flex-start;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 10px;
+    scrollbar-width: thin;
+  }
+
+  .bus-body::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .bus-body::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 3px;
+  }
+
+  .bus-body::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 3px;
+  }
+
+  .seat-map-container {
+    overflow: hidden;
+  }
+
+  .seat {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    font-size: 10px;
+  }
+
+  .seat-row {
+    gap: 3px;
+  }
+}
 </style>

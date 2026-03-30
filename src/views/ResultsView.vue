@@ -114,4 +114,25 @@ function toggleTravel(travelId) {
   padding: 40px;
   color: #666;
 }
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-wrap: wrap;
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .date {
+    margin-left: 0;
+  }
+
+  .back-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .results-list {
+    padding: 16px;
+  }
+}
 </style>

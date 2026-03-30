@@ -184,4 +184,35 @@ function formatDuration(seconds) {
   opacity: 1;
   transition: max-height 0.5s ease, opacity 0.5s ease 0.15s;
 }
+
+@media (max-width: 768px) {
+  .card-header {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .company {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .travel-info {
+    order: -1;
+  }
+
+  .class-info {
+    text-align: left;
+  }
+
+  .price-section {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .per-person {
+    display: none;
+  }
+}
 </style>
