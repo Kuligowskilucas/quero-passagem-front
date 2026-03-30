@@ -172,31 +172,6 @@ function formatDuration(seconds) {
   border: 2px solid #1a3a5c;
 }
 
-/* .seats-enter-active,
-.seats-leave-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.seats-enter-from {
-  opacity: 0;
-  transform: translateY(-15px);
-}
-
-.seats-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.seats-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.seats-leave-to {
-  opacity: 0;
-  transform: translateY(-15px);
-} */
-
  .seats-wrapper {
   max-height: 0;
   overflow: hidden;

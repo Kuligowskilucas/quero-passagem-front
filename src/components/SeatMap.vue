@@ -56,7 +56,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../services/api'
-import LoadingSpinner from './LoadingSpinning.vue'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 const props = defineProps({
   travelId: { type: String, required: true },
