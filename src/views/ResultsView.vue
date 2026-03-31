@@ -55,6 +55,7 @@
         :key="travel.id"
         :travel="travel"
         :expanded="expandedTravelId === travel.id"
+        :logo="companyLogos[travel.company.id] || ''"
         @toggle="toggleTravel(travel.id)"
       />
     </main>
@@ -62,10 +63,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import store from '../services/store'
 import TravelCard from '../components/TravelCard.vue'
+import api from '../services/api'
 
 const router = useRouter()
 const expandedTravelId = ref(null)
@@ -123,6 +125,20 @@ const formattedDate = computed(() => {
   return `${d}/${m}/${y}`
 })
 
+const companyLogos = ref({})
+
+onMounted(async () => {
+  const companyIds = [...new Set(store.travels.map(t => t.company?.id))];
+  for (const id of companyIds) {
+    try {
+      const response = await api.get(`/companies/${id}`)
+      companyLogos.value[id] = response.data.logo?.svg || response.data.logo?.jpg || ''
+    } catch (e) {
+      // silently fail
+    }
+  }
+})
+
 function goBack() {
   router.push({ name: 'search' })
 }
@@ -134,6 +150,8 @@ function toggleTravel(travelId) {
 function toggleTimePeriod(label) {
   activeTimePeriod.value = activeTimePeriod.value === label ? '' : label
 }
+
+
 </script>
 
 <style scoped>

@@ -3,8 +3,9 @@
     <div class="card-left-border"></div>
     <div class="card-content">
       <div class="card-header" @click="$emit('toggle')">
-        <div class="company">
-          <strong>{{ travel.company.name }}</strong>
+         <div class="company">
+          <img v-if="logo" :src="logo" :alt="travel.company.name" class="company-logo" />
+          <strong v-else>{{ travel.company.name }}</strong>
         </div>
 
         <div class="travel-info">
@@ -46,7 +47,7 @@
 
       <div class="card-footer">
         <div class="footer-left">
-          <span class="company-name">{{ travel.company.name }}</span>
+          <span class="company-name">Viação {{ travel.company.name }}</span>
         </div>
         <div class="footer-right">
           <span v-if="travel.loungeVipAvailable" class="badge badge-vip">
@@ -69,12 +70,13 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import SeatMap from './SeatMap.vue'
 import { Star, Ticket, Building2 } from 'lucide-vue-next'
+import SeatMap from './SeatMap.vue'
 
 const props = defineProps({
   travel: Object,
   expanded: Boolean,
+  logo: { type: String, default: '' },
 })
 
 defineEmits(['toggle'])
@@ -316,6 +318,12 @@ function formatPrice(price) {
   background-color: #f5f5f5;
   color: #555;
   border: 1px solid #e0e0e0;
+}
+
+.company-logo {
+  max-width: 90px;
+  max-height: 40px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
