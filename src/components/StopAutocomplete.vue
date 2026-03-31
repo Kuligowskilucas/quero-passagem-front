@@ -1,14 +1,20 @@
 <template>
   <div class="field">
     <label>{{ label }}</label>
-    <input
-      type="text"
-      :value="modelValue"
-      @input="onInput"
-      @focus="showDropdown = true"
-      @blur="onBlur"
-      :placeholder="placeholder"
-    />
+    <div class="input-wrapper">
+      <span v-if="icon" class="field-icon">
+        <Circle v-if="icon === 'origin'" :size="16" color="#999" />
+        <MapPin v-if="icon === 'destination'" :size="16" color="#1a3a5c" />
+      </span>
+      <input
+        type="text"
+        :value="modelValue"
+        @input="onInput"
+        @focus="showDropdown = true"
+        @blur="onBlur"
+        :placeholder="placeholder"
+      />
+    </div>
     <ul v-if="showDropdown && filtered.length" class="dropdown">
       <li v-for="stop in filtered" :key="stop.id" @mousedown="select(stop)">
         {{ stop.name }}
@@ -18,13 +24,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
+import { Circle, MapPin } from 'lucide-vue-next'
 
 const props = defineProps({
   label: String,
   placeholder: String,
   stops: Array,
   modelValue: String,
+  icon: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'select'])
@@ -66,30 +74,55 @@ function onBlur() {
 
 <style scoped>
 .field {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   position: relative;
 }
 
 .field label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
   margin-bottom: 4px;
   font-weight: 600;
+  padding-left: 12px;
 }
 
-.field input {
-  width: 100%;
-  padding: 12px;
+.input-wrapper {
+  display: flex;
+  align-items: center;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 12px;
+  padding: 0 12px;
   transition: border-color 0.2s;
 }
 
-.field input:focus {
-  outline: none;
+.input-wrapper:focus-within {
   border-color: #1a3a5c;
+}
+
+.field-icon {
+  margin-right: 10px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* .icon-origin {
+  color: #666;
+  font-size: 18px;
+}
+
+.icon-destination {
+  color: #1a3a5c;
+  font-size: 18px;
+} */
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
 }
 
 .dropdown {
@@ -99,7 +132,7 @@ function onBlur() {
   right: 0;
   background: white;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 12px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 10;
@@ -108,7 +141,7 @@ function onBlur() {
 }
 
 .dropdown li {
-  padding: 10px 12px;
+  padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
 }

@@ -2,25 +2,38 @@
   <div class="search-card">
     <h1>Comprar Passagens de Ônibus</h1>
 
-    <StopAutocomplete
-      label="Partindo de"
-      placeholder="Digite a cidade de origem"
-      :stops="stops"
-      v-model="fromSearch"
-      @select="selectedFrom = $event"
-    />
+    <div class="fields-group">
+      <StopAutocomplete
+        label="Partindo de"
+        placeholder="Digite a cidade de origem"
+        :stops="stops"
+        v-model="fromSearch"
+        @select="selectedFrom = $event"
+        icon="origin"
+      />
 
-    <StopAutocomplete
-      label="Indo para"
-      placeholder="Digite a cidade de destino"
-      :stops="stops"
-      v-model="toSearch"
-      @select="selectedTo = $event"
-    />
+      <button class="swap-btn" @click="swapStops" type="button">
+        <ArrowUpDown :size="18" color="#1a3a5c" />
+      </button>
 
-    <div class="field">
-      <label>Data de Saída</label>
-      <input type="date" v-model="travelDate" :min="today" />
+      <StopAutocomplete
+        label="Indo para"
+        placeholder="Digite a cidade de destino"
+        :stops="stops"
+        v-model="toSearch"
+        @select="selectedTo = $event"
+        icon="destination"
+      />
+    </div>
+
+    <div class="date-row">
+      <div class="field date-field">
+        <label>Data Saída</label>
+        <div class="date-input-wrapper">
+          <Calendar class="field-icon-svg" :size="16" color="#999" />
+          <input type="date" v-model="travelDate" :min="today" />
+        </div>
+      </div>
     </div>
 
     <button @click="handleSearch" :disabled="!canSearch || loading" class="search-btn">
@@ -39,6 +52,7 @@
 import { ref, computed, onMounted } from 'vue'
 import api from '../services/api'
 import StopAutocomplete from './StopAutocomplete.vue'
+import { ArrowUpDown, Calendar } from 'lucide-vue-next'
 
 const emit = defineEmits(['search'])
 
@@ -67,6 +81,15 @@ onMounted(async () => {
 function isAllowedState(stop) {
   const name = stop.name || ''
   return name.includes(', SP') || name.includes(', PR')
+}
+
+function swapStops() {
+  const tempSearch = fromSearch.value
+  const tempSelected = selectedFrom.value
+  fromSearch.value = toSearch.value
+  selectedFrom.value = selectedTo.value
+  toSearch.value = tempSearch
+  selectedTo.value = tempSelected
 }
 
 async function handleSearch() {
@@ -103,67 +126,108 @@ async function handleSearch() {
 
 <style scoped>
 .search-card {
-  background: white;
-  border-radius: 16px;
-  padding: 40px;
+  background: #1a3a5c;
+  border-radius: 20px;
+  padding: 32px;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .search-card h1 {
   text-align: center;
   margin-bottom: 24px;
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.fields-group {
+  position: relative;
+}
+
+.swap-btn {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #1a3a5c;
   color: #1a3a5c;
-  font-size: 22px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background-color 0.2s;
 }
 
-.field {
-  margin-bottom: 16px;
+.swap-btn:hover {
+  background-color: #f0f4f8;
 }
 
-.field label {
+.date-row {
+  margin-top: 4px;
+}
+
+.date-field label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
   margin-bottom: 4px;
   font-weight: 600;
+  padding-left: 12px;
 }
 
-.field input {
-  width: 100%;
-  padding: 12px;
+.date-input-wrapper {
+  display: flex;
+  align-items: center;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 12px;
+  padding: 0 12px;
   transition: border-color 0.2s;
 }
 
-.field input:focus {
-  outline: none;
+.date-input-wrapper:focus-within {
   border-color: #1a3a5c;
+}
+
+.date-input-wrapper input {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
 }
 
 .search-btn {
   width: 100%;
-  padding: 14px;
-  background-color: #1a3a5c;
+  padding: 16px;
+  background-color: #2c5fa1;
   color: white;
   border: none;
-  border-radius: 25px;
+  border-radius: 30px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 16px;
   transition: background-color 0.2s;
+  letter-spacing: 1px;
 }
 
 .search-btn:hover:not(:disabled) {
-  background-color: #24527a;
+  background-color: #1a3a5c;
 }
 
 .search-btn:disabled {
-  opacity: 0.6;
+  background-color: #2c5fa1;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -188,6 +252,11 @@ async function handleSearch() {
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+.field-icon-svg {
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 @keyframes spin {
