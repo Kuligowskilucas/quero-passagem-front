@@ -107,16 +107,6 @@ function onBlur() {
   flex-shrink: 0;
 }
 
-/* .icon-origin {
-  color: #666;
-  font-size: 18px;
-}
-
-.icon-destination {
-  color: #1a3a5c;
-  font-size: 18px;
-} */
-
 .input-wrapper input {
   width: 100%;
   padding: 12px 0;
