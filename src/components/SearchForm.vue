@@ -187,10 +187,11 @@ async function handleSearch() {
 .date-input-wrapper {
   display: flex;
   align-items: center;
-  border: 2px solid #e0e0e0;
+  border: 2px solid white;
   border-radius: 12px;
   padding: 0 12px;
   transition: border-color 0.2s;
+  background: white;
 }
 
 .date-input-wrapper:focus-within {
