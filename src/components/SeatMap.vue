@@ -78,7 +78,12 @@ onMounted(async () => {
       seatMap.value = data[0].seats
     }
   } catch (e) {
-    error.value = 'Erro ao carregar poltronas.'
+    const msg = e.response?.data?.errors?.[0] || ''
+    if (msg.includes('expired') || msg.includes('invalid')) {
+      error.value = 'Viagem expirada. Faça uma nova busca.'
+    } else {
+      error.value = 'Erro ao carregar poltronas. Tente novamente.'
+    }
   } finally {
     loading.value = false
   }
